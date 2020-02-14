@@ -12,7 +12,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
    <!-- CSRF Token -->
    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>AdminLTE 3 | Starter</title>
+  <title>KassenSystem</title>
 <link rel="stylesheet" href="/css/app.css">
 </head>
 <body class="hold-transition sidebar-mini">
@@ -131,6 +131,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="content">
       <div class="container-fluid">
           <router-view></router-view>
+          <vue-progress-bar></vue-progress-bar>
          </div><!-- /.container-fluid --> 
     </div>
      <!-- main content -->

@@ -6,7 +6,7 @@
               <div class="card-header">
                 <h3 class="card-title">Users table</h3> 
                 <div class="card-tools">
-              <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal">Add new
+              <button class="btn btn-success" data-toggle="modal" data-target="#addNew">Add new
               <i class="fa fa-w fa-user-plus"></i>
               </button>
               </div>
@@ -19,33 +19,36 @@
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>User</th>
                       <th>Name</th>
                       <th>Email</th>
                       <th>Type</th>
+                      <th>Registed at</th>
                       <th>Modify</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>183</td>
-                      <td>John Doe</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-success">Approved</span></td>
-                      <td>admin</td>
+                      <tr v-for="user in users" :key="user.id">
+                         <td>{{user.id}}</td>
+                         <td>{{user.name|upText}}</td>
+                         <td>{{user.email}}</td>
+                         <td>{{user.type}}</td>
+                         <td>{{user.created_at|myDate}}</td>
                       <td><a href="#">
                       <i class="fa fa-edit text-blue"></i>
                       </a>
                       <a href="#">
-                      <i class="fa fa-trash text-red"></i>
+                      <i class="fa fa-trash text-red" @click="deleteUser(user.id)"></i>
                       </a>
                       </td>
-                    </tr>
+                      </tr>
+                     
+                    
                     
                   </tbody>
                 </table>
                 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -110,6 +113,7 @@
     export default {
         data(){
             return {
+              users:{},
                 form:new Form({
                     name:'',
                     email:'',
@@ -123,9 +127,52 @@
         },
         methods:{
             createUser(){
-                this.form.post('api/user');
-            }
+              this.$Progress.start();
+                this.form.post('api/user').then(()=>{
+Fire.$emit('AfterCreate');
+                Toast.fire({
+  icon: 'success',
+  title: 'User Created Successfully'
+})
+                this.$Progress.finish();
+                $('#addNew').modal('hide');
+                }).catch();
+                
+            },
+            loadUsers(){
+              
+              axios.get("api/user").then(({data})=>(this.users = data.data));
+              
+            },
+            deleteUser(id){
+            Swal.fire({
+  title: 'Are you sure?',
+  text: "You won't be able to revert this!",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Yes, delete it!'
+}).then((result) => {
+  if (result.value) {
+    Swal.fire(
+      'Deleted!',
+      'Your file has been deleted.',
+      'success'
+    )
+  }
+})
+            },
+           
         },
+         created(){
+           
+              this.loadUsers();
+              Fire.$on('AfterCreate',()=>this.loadUsers());
+              
+              
+            },
+        
         mounted() {
             console.log('Component mounted.')
         }
