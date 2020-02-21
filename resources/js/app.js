@@ -4,11 +4,25 @@ import VueRouter from 'vue-router';
 import profile from './components/Profile';
 import dashboard from './components/Dashboard';
 import users from './components/Users';
+import dev from './components/Dev';
 import { Form, HasError, AlertError } from 'vform';
 import Moment from 'moment';
 import VueProgressBar from 'vue-progressbar';
 import Swal from 'sweetalert2';
+Vue.component(
+  'passport-clients',
+  require('./components/passport/Clients.vue').default
+);
 
+Vue.component(
+  'passport-authorized-clients',
+  require('./components/passport/AuthorizedClients.vue').default
+);
+
+Vue.component(
+  'passport-personal-access-tokens',
+  require('./components/passport/PersonalAccessTokens.vue').default
+);
 
 window.Form = Form;
 window.Swal = Swal;
@@ -20,8 +34,9 @@ const options = {
   thickness: '5px',
   transition: {
     speed: '0.2s',
-    opacity: '0.6s',
-    termination: 3000
+    opacity: '0.1s',
+    termination: 300,
+    location:top,
   },
   autoRevert: true,
   location: 'left',
@@ -35,7 +50,7 @@ const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
   showConfirmButton: false,
-  timer: 3000,
+  timer: 500,
   timerProgressBar: true,
   onOpen: (toast) => {
     toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -54,6 +69,7 @@ const routes = [
     { path: '/dashboard', component:dashboard },
     { path: '/profile', component: profile },
     { path: '/users', component: users },
+    { path: '/dev', component: dev },
   ];
   const router = new VueRouter({
     mode: 'history',
