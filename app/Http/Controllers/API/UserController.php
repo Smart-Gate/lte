@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-   
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
    
     public function index()
     {
@@ -49,7 +52,17 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        
+    }
+    public function profile()
+    {
+       return auth('api')->user(); 
+    }
+    public function updateProfile(Request $request)
+    {
+       $user =  auth('api')->user();
+    //    return['msg'=>'profile updated']; 
+    return $request->photo;
     }
 
     /**
